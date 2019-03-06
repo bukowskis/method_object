@@ -3,8 +3,6 @@ prepare:
   - url: "https://raw.githubusercontent.com/bukowskis/style-guide/master/rubocop.yml"
     path: ".codeclimate_rubocop.yml"
 plugins:
-  bundler-audit:
-    enabled: true
   rubocop:
     enabled: true
     channel: rubocop-0-63
