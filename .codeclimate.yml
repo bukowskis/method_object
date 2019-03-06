@@ -1,0 +1,29 @@
+prepare:
+  fetch:
+  - url: "https://raw.githubusercontent.com/bukowskis/style-guide/master/rubocop.yml"
+    path: ".codeclimate_rubocop.yml"
+plugins:
+  bundler-audit:
+    enabled: true
+  rubocop:
+    enabled: true
+    channel: rubocop-0-63
+    config:
+      file: .codeclimate_rubocop.yml
+exclude_patterns:
+- "lib/generators/**"
+- "config/"
+- "db/"
+- "dist/"
+- "features/"
+- "**/node_modules/"
+- "script/"
+- "**/spec/"
+- "**/test/"
+- "**/tests/"
+- "Tests/"
+- "**/vendor/"
+- "**/public/"
+- "**/*_test.go"
+- "**/*.d.ts"
+- "**/*.d.ts"
