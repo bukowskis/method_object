@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 class ExampleMethodObject
   include MethodObject
 
