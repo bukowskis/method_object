@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'bukowskis_method_object'
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.authors     = %w[Bukowskis]
   s.summary     = 'Module for creating method objects / service classes'
   s.description = 'Module for creating method objects / service classes'
