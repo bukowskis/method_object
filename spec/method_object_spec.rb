@@ -38,6 +38,12 @@ RSpec.describe MethodObject do
         expect(ExampleMethodObject.call(an_option: 'foo', &:upcase)).to eq('FOO')
       end
     end
+
+    context 'when called with unknown options' do
+      it 'raises an error' do
+        expect { ExampleMethodObject.call(an_option: 'foo', extra: 'blah') }.to raise_error(KeyError)
+      end
+    end
   end
 
   describe '.assign' do
