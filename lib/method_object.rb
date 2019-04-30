@@ -13,12 +13,22 @@ module MethodObject
       new(*args).call(&block)
     end
 
-    def __check_for_unknown_options(*_, **options)
-      return if self.dry_initializer.options.empty?
+    def __check_for_unknown_options(*args)
+      return if __defined_options.empty?
 
-      source_keys = dry_initializer.options.map(&:source)
-      unknown_keys = options.keys - source_keys
-      raise KeyError, "Key(s) #{unknown_keys} not found in #{source_keys}" if unknown_keys.any?
+      opts = args.drop(__defined_params.length).first || {}
+      raise ArgumentError, "Unexpected argument #{opts}" unless opts.is_a? Hash
+
+      unknown_options = opts.keys - __defined_options
+      raise KeyError, "Key(s) #{unknown_options} not found in #{__defined_options}" if unknown_options.any?
+    end
+
+    def __defined_options
+      dry_initializer.options.map(&:source)
+    end
+
+    def __defined_params
+      dry_initializer.params.map(&:source)
     end
 
     def param(name, type = nil, **opts, &block)
