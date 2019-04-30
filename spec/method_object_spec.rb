@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+class EmptyMethodObject
+  include MethodObject
+end
+
 class ExampleMethodObject
   include MethodObject
 
@@ -15,6 +19,18 @@ class ExampleMethodObject
 end
 
 RSpec.describe MethodObject do
+  describe '.param' do
+    subject { Class.new(EmptyMethodObject) }
+
+    it 'raises if defined with a default value' do
+      expect { subject.param :foo, default: ->(*) { :bar } }.to raise_error(SyntaxError)
+    end
+
+    it 'raises if defined as optional' do
+      expect { subject.param :foo, optional: true }.to raise_error(SyntaxError)
+    end
+  end
+
   describe '.call' do
     context 'when called with a block' do
       it 'passes the block to the #call method' do
