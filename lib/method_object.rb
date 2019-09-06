@@ -13,6 +13,22 @@ module MethodObject
       new(*args).call(&block)
     end
 
+    # Because of the positioning of multiple params, params can never be omitted.
+    def param(name, type = nil, **opts, &block)
+      raise ArgumentError, "Default value for param not allowed - #{name}" if opts.key? :default
+      raise ArgumentError, "Optional params not supported - #{name}" if opts.fetch(:optional, false)
+
+      dry_initializer.param(name, type, **opts, &block)
+      self
+    end
+
+    # DEPRECATED
+    def assign(variable, to:)
+      warn 'MethodObject.assign is deprecated. ' \
+           "Please use this instead: `option #{variable.inspect}, default: ...`"
+      option variable, default: to
+    end
+
     def __check_for_unknown_options(*args)
       return if __defined_options.empty?
 
@@ -30,18 +46,6 @@ module MethodObject
 
     def __defined_params
       dry_initializer.params.map(&:source)
-    end
-
-    def param(name, type = nil, **opts, &block)
-      raise SyntaxError, "Default value for param not allowed - #{name}" if opts.key? :default
-      raise SyntaxError, "Optional params not supported - #{name}" if opts.fetch(:optional, false)
-
-      dry_initializer.param(name, type, **opts, &block)
-      self
-    end
-
-    def assign(variable, to:)
-      option variable, default: to
     end
   end
 end
