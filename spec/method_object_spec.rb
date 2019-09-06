@@ -1,66 +1,97 @@
 require 'spec_helper'
 
-class EmptyMethodObject
+class MinimalMethodObject
   include MethodObject
+
+  option :color
+
+  def call
+    "The color is #{color}"
+  end
 end
 
 class ExampleMethodObject
   include MethodObject
 
-  option :an_option
+  param :shape
+  option :color
+  option :size, default: -> { :big }
 
   def call
-    if block_given?
-      yield an_option
-    else
-      an_option
-    end
+    block_given? ? yield(to_s) : to_s
   end
-end
 
-class ClassUsingAssign
-  include MethodObject
-
-  assign :example, to: proc { 'hej' }
-
-  def call
-    example
+  def to_s
+    "#{size} #{color} #{shape}"
   end
 end
 
 RSpec.describe MethodObject do
   describe '.param' do
-    it 'raises if defined with a default value' do
-      expect do
-        EmptyMethodObject.param :foo, default: ->(*) { :bar }
-      end.to raise_error(SyntaxError)
+    context 'when defining a default value' do
+      it 'raises an error' do
+        expect do
+          Class.new do
+            include MethodObject
+
+            param :shape, default: -> { :square }
+          end
+        end.to raise_error ArgumentError, /not allowed/
+      end
     end
 
-    it 'raises if defined as optional' do
-      expect { EmptyMethodObject.param :foo, optional: true }.to raise_error(SyntaxError)
+    context 'when defined as optional' do
+      it 'raises an error' do
+        expect do
+          Class.new do
+            include MethodObject
+
+            param :user, optional: true
+          end
+        end.to raise_error ArgumentError, /not supported/
+      end
+    end
+
+    context 'when properly defined' do
+      it 'is mandatory' do
+        expect do
+          ExampleMethodObject.call
+        end.to raise_error ArgumentError, /wrong number of arguments/
+      end
     end
   end
 
   describe '.call' do
-    context 'when called with a block' do
-      it 'passes the block to the #call method' do
-        expect(ExampleMethodObject.call(an_option: 'foo')).to eq('foo')
-        expect(ExampleMethodObject.call(an_option: 'foo', &:upcase)).to eq('FOO')
+    context 'without block' do
+      it 'has access to options' do
+        result = MinimalMethodObject.call color: 'blue'
+
+        expect(result).to eq 'The color is blue'
       end
     end
 
-    context 'when called with unknown options' do
+    context 'with block' do
+      it 'passes the block' do
+        result = ExampleMethodObject.call('circle', color: 'blue', &:upcase)
+
+        expect(result).to eq 'BIG BLUE CIRCLE'
+      end
+    end
+
+    context 'with unknown options' do
       it 'raises an error' do
         expect do
-          ExampleMethodObject.call(an_option: 'foo', extra: 'blah')
-        end.to raise_error(KeyError)
+          ExampleMethodObject.call 'square', color: 'red', ability: 'Totally invalid'
+        end.to raise_error KeyError, 'Key(s) [:ability] not found in [:color, :size]'
       end
     end
-  end
 
-  describe '.assign' do
-    it 'adds the assigned variable as an option with a default value' do
-      expect(ClassUsingAssign.call).to eq('hej')
+    context 'without options' do
+      it 'raises an error' do
+        expect do
+          ExampleMethodObject.call 'square', 'boom!'
+        end.to raise_error ArgumentError, 'Unexpected argument boom!'
+      end
     end
   end
 end
