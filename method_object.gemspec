@@ -5,8 +5,6 @@ Gem::Specification.new do |s|
   s.summary     = 'Module for creating method objects / service classes'
   s.description = 'Module for creating method objects / service classes'
 
-  s.metadata['allowed_push_host'] = 'none'
-
   s.files = Dir['{lib}/**/*', 'README.md']
   s.test_files = Dir['spec/**/*']
 
@@ -14,4 +12,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rspec-core'
   s.add_development_dependency 'rspec-expectations'
+  s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'rubocop-rspec'
 end

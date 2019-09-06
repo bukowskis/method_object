@@ -20,7 +20,8 @@ module MethodObject
       raise ArgumentError, "Unexpected argument #{opts}" unless opts.is_a? Hash
 
       unknown_options = opts.keys - __defined_options
-      raise KeyError, "Key(s) #{unknown_options} not found in #{__defined_options}" if unknown_options.any?
+      message = "Key(s) #{unknown_options} not found in #{__defined_options}"
+      raise KeyError, message if unknown_options.any?
     end
 
     def __defined_options
@@ -32,8 +33,8 @@ module MethodObject
     end
 
     def param(name, type = nil, **opts, &block)
-      raise SyntaxError, "Default value for param is not allowed - #{name}" if opts.key? :default
-      raise SyntaxError, "Optional params is not supported - #{name}" if opts.fetch(:optional, false)
+      raise SyntaxError, "Default value for param not allowed - #{name}" if opts.key? :default
+      raise SyntaxError, "Optional params not supported - #{name}" if opts.fetch(:optional, false)
 
       dry_initializer.param(name, type, **opts, &block)
       self

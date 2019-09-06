@@ -18,16 +18,26 @@ class ExampleMethodObject
   end
 end
 
+class ClassUsingAssign
+  include MethodObject
+
+  assign :example, to: proc { 'hej' }
+
+  def call
+    example
+  end
+end
+
 RSpec.describe MethodObject do
   describe '.param' do
-    subject { Class.new(EmptyMethodObject) }
-
     it 'raises if defined with a default value' do
-      expect { subject.param :foo, default: ->(*) { :bar } }.to raise_error(SyntaxError)
+      expect do
+        EmptyMethodObject.param :foo, default: ->(*) { :bar }
+      end.to raise_error(SyntaxError)
     end
 
     it 'raises if defined as optional' do
-      expect { subject.param :foo, optional: true }.to raise_error(SyntaxError)
+      expect { EmptyMethodObject.param :foo, optional: true }.to raise_error(SyntaxError)
     end
   end
 
@@ -41,22 +51,14 @@ RSpec.describe MethodObject do
 
     context 'when called with unknown options' do
       it 'raises an error' do
-        expect { ExampleMethodObject.call(an_option: 'foo', extra: 'blah') }.to raise_error(KeyError)
+        expect do
+          ExampleMethodObject.call(an_option: 'foo', extra: 'blah')
+        end.to raise_error(KeyError)
       end
     end
   end
 
   describe '.assign' do
-    class ClassUsingAssign
-      include MethodObject
-
-      assign :example, to: proc { "hej" }
-
-      def call
-        example
-      end
-    end
-
     it 'adds the assigned variable as an option with a default value' do
       expect(ClassUsingAssign.call).to eq('hej')
     end
