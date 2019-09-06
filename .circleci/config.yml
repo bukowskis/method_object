@@ -12,6 +12,7 @@ jobs:
       - checkout
       - run: bundle install --jobs=4 --retry=3 --path vendor/bundle
       - run: bundle exec rspec
+      - run: bundle exec rubocop
 
 workflows:
   version: 2
