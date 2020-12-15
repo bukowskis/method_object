@@ -104,8 +104,8 @@ RSpec.describe MethodObject do
       end
     end
 
-    context 'without an object' do
-      it 'has the object' do
+    context 'with one param' do
+      it 'has the argument that was passed in' do
         object = Object.new
         result = InspectionMethodObject.call object
 
