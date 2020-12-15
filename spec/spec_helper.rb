@@ -1,6 +1,9 @@
 require 'bundler/setup'
 require 'method_object'
 
+require 'warning'
+Warning.process { raise "This gem should not cause deprecation warnings, but it did: #{_1}" }
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = '.rspec_status'

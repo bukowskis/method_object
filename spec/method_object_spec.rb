@@ -56,7 +56,7 @@ RSpec.describe MethodObject do
       it 'is mandatory' do
         expect do
           ExampleMethodObject.call
-        end.to raise_error ArgumentError, /wrong number of arguments/
+        end.to raise_error KeyError, /option 'color' is required/
       end
     end
   end

@@ -1,3 +1,7 @@
+# 1.0.1
+
+* Fix deprecation warnings related to keyword arguments
+
 # 1.0.0
 
 Breaking changes:
