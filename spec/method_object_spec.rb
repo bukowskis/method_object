@@ -26,6 +26,16 @@ class ExampleMethodObject
   end
 end
 
+class InspectionMethodObject
+  include MethodObject
+
+  param :something
+
+  def call
+    something
+  end
+end
+
 RSpec.describe MethodObject do
   describe '.param' do
     context 'when defining a default value' do
@@ -56,7 +66,7 @@ RSpec.describe MethodObject do
       it 'is mandatory' do
         expect do
           ExampleMethodObject.call
-        end.to raise_error KeyError, /option 'color' is required/
+        end.to raise_error ArgumentError, /wrong number of arguments/
       end
     end
   end
@@ -91,6 +101,15 @@ RSpec.describe MethodObject do
         expect do
           ExampleMethodObject.call 'square', 'boom!'
         end.to raise_error ArgumentError, 'Unexpected argument boom!'
+      end
+    end
+
+    context 'without an object' do
+      it 'has the object' do
+        object = Object.new
+        result = InspectionMethodObject.call object
+
+        expect(result).to be object
       end
     end
   end

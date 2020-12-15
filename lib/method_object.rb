@@ -13,7 +13,7 @@ module MethodObject
 
       if kwargs.empty?
         # Preventing `Passing the keyword argument as the last hash parameter is deprecated`
-        new(args).call(&block)
+        new(*args).call(&block)
       else
         new(*args, **kwargs).call(&block)
       end
