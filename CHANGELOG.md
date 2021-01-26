@@ -1,3 +1,8 @@
+# master
+
+* Fix deprecation warnings related to keyword arguments
+* Remove the deprecated `#assign` method (it was just an alias for `#option`)
+
 # 1.0.0
 
 Breaking changes:

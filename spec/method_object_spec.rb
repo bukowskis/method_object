@@ -26,6 +26,16 @@ class ExampleMethodObject
   end
 end
 
+class InspectionMethodObject
+  include MethodObject
+
+  param :something
+
+  def call
+    something
+  end
+end
+
 RSpec.describe MethodObject do
   describe '.param' do
     context 'when defining a default value' do
@@ -91,6 +101,15 @@ RSpec.describe MethodObject do
         expect do
           ExampleMethodObject.call 'square', 'boom!'
         end.to raise_error ArgumentError, 'Unexpected argument boom!'
+      end
+    end
+
+    context 'with one param' do
+      it 'has the argument that was passed in' do
+        object = Object.new
+        result = InspectionMethodObject.call object
+
+        expect(result).to be object
       end
     end
   end
