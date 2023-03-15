@@ -1,0 +1,16 @@
+version: '3.4'
+
+services:
+  runner:
+    image: ruby:3.0.5-buster
+    stdin_open: true
+    tty: true
+    command: /bin/sh
+    tmpfs:
+      - /tmp
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle
+
+volumes:
+  bundle:
