@@ -1,8 +1,8 @@
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
-       - image: circleci/ruby:2.4.1-node-browsers
+       - image: cimg/ruby:3.0.5
          environment:
            RAILS_ENV: test
 
@@ -15,7 +15,7 @@ jobs:
       - run: bundle exec rubocop
 
 workflows:
-  version: 2
+  version: 2.1
   test:
     jobs:
       - build
